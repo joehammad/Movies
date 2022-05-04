@@ -1,36 +1,23 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+
+import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { MediaContext } from '../MediaContext';
 
-
+  
 
 
 
 export default function Home() {
+  const {Movies , TvShow} = useContext(MediaContext);
   let navigate =useNavigate();
   function goToDetails(id){
     navigate({
-      pathname:'/MovieDetails',
+      pathname:'/Movies',
       search:`?id=${id}`
     })
   }
-  const [TvShow, setTvShow] = useState([]);
-const [Movies, setMovies] = useState([]);
-let baseUrl = 'https://image.tmdb.org/t/p/original/'
-async function getMovies(){
-  let {data}= await axios.get('https://api.themoviedb.org/3/trending/movie/day?api_key=dab0706c5596743d9bd8fecdbefa315e')
-  setMovies(data.results);
-}
-async function getTvShow(){
-  let {data}= await axios.get('https://api.themoviedb.org/3/trending/tv/day?api_key=dab0706c5596743d9bd8fecdbefa315e')
-  setTvShow(data.results);
-}
+  let baseUrl = 'https://image.tmdb.org/t/p/original/'
 
- useEffect(()=>{
-  getMovies();
-  getTvShow();
-
- },[])
   return (
     <>
     <div className='row '>
@@ -46,7 +33,7 @@ async function getTvShow(){
       </div>
       {Movies.map((movie,index)=> 
       <div onClick={()=>goToDetails(movie.id)} className='col-md-2 my-3' key={index}>
-         <Link style={{ textDecoration: 'none',color:"#fff" }} to={`/MovieDetails/${movie.id}`}>
+         <Link style={{ textDecoration: 'none',color:"#fff" }} to={`/Movies/${movie.id}`}>
         <img src={baseUrl + movie.poster_path} className='w-100' />
         <div>{movie.title}</div>
         </Link>
@@ -66,7 +53,7 @@ async function getTvShow(){
       </div>
       {TvShow.map((show,index)=> 
       <div className='col-md-2 my-3' key={index}>
-        <Link style={{ textDecoration: 'none',color:"#fff" }} to={`/MovieDetails/${show.id}`}>
+        <Link style={{ textDecoration: 'none',color:"#fff" }} to={`/Movies/${show.id}`}>
         <img src={baseUrl + show.poster_path} className='w-100' />
         <div>{show.name}</div>
         </Link>
